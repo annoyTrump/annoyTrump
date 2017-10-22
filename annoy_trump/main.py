@@ -32,11 +32,12 @@ DELETE_TWITTER_LINKS = [
     'https://www.youtube.com/watch?v=lWIFAX8oC24',
     'https://www.imore.com/how-delete-your-twitter-account',
     'http://www.wikihow.com/Delete-a-Twitter-Account',
-    'https://www.purevpn.com/blog/how-to-delete-twitter-account/'
+    'https://www.purevpn.com/blog/how-to-delete-twitter-account/',
+    'https://www.youtube.com/watch?v=AXHZaDiBKsU'
 ]
 
 MESSAGE = (
-    '@realDonaldTrump, delete your account. You\'re {noun}. #ImpeachTrump '
+    '@realDonaldTrump, {action}! You\'re {noun}. #ImpeachTrump '
     '{link}'
 )
 
@@ -51,6 +52,14 @@ NOUNS = [
     'a lame duck',
     'a hypocrite',
     'a mistake',
+]
+
+ACTIONS = [
+    'delete your twitter',
+    'put down the phone',
+    'drop the golf clubs',
+    'do your job',
+    'help Puerto Rico 🇵🇷'
 ]
 
 
@@ -71,11 +80,13 @@ def main():
             try:
                 link = randint(0, len(DELETE_TWITTER_LINKS) - 1)
                 noun = randint(0, len(NOUNS) - 1)
-                message = MESSAGE.format(link=DELETE_TWITTER_LINKS[link], noun=NOUNS[noun])
+                action = randint(0, len(ACTIONS) - 1)
+                message = MESSAGE.format(link=DELETE_TWITTER_LINKS[link], noun=NOUNS[noun], action=ACTIONS[action])
                 while message in recent_messages:
                     link = randint(0, len(DELETE_TWITTER_LINKS) - 1)
                     noun = randint(0, len(NOUNS) - 1)
-                    message = MESSAGE.format(link=DELETE_TWITTER_LINKS[link], noun=NOUNS[noun])
+                    action = randint(0, len(ACTIONS) - 1)
+                    message = MESSAGE.format(link=DELETE_TWITTER_LINKS[link], noun=NOUNS[noun], action=ACTIONS[action])
                 recent_messages.append(message)
 
                 # tell Trump how to delete his account
@@ -101,7 +112,7 @@ def main():
                     else:
                         print('\r\nError ' + request.status_code + '. ' + request.text + ': ' + message)
                 sleep(60)
-            except TimeoutError:
+            except (TimeoutError, TwitterConnectionError):
                 pass
         else:
             if i == 0:
