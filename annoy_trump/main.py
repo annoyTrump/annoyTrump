@@ -14,7 +14,7 @@ For this script to work, a user must go to Twitter.com, log in and following the
 """
 
 from TwitterAPI import TwitterAPI
-from time import time, sleep
+from time import time, sleep, strptime, ctime
 from random import randint
 from collections import deque
 import json
@@ -75,6 +75,27 @@ def main():
     retry_post = None
     while True:
         time_now = time()
+        time_now_hr = strptime(ctime(time_now), '%a %b %d %H:%M:%S %Y',)
+        
+        # Every morning at 8 am, try to spread how people can join the Revolution against Trump.
+        if time_now_hr.tm_min == 0 and time_now_hr.tm_sec == 0 and time_now_hr.tm_hour == 8:
+            try:
+                api = TwitterAPI(CONSUMER_KEY, CONSUMER_SECRET, ACCESS_TOKEN, ACCESS_SECRET)
+                request = api.request(
+                    'statuses/update',
+                    {
+                        'status': 'Want to tell @realDonaldTrump how bad he is doing every hour? '
+                                  'Download this Python script. https://github.com/annoyTrump/annoyTrump'
+                    }
+                )
+                if request.status_code == 200:
+                    print('\033[92m' + '\r\nSent ad.' + '\033[0m')
+                else:
+                    print('Ad could not be sent.')
+            except (TimeoutError, TwitterConnectionError):
+                pass
+            
+        # Every hour, tweet at 45, calling him out on his lack of leadership and overuse of Twitter and golfing.
         if time_now % 3600 < 10 or (retry_post is not None and retry_post is True):
             retry_post = False
             try:
