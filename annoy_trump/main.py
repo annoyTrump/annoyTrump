@@ -78,7 +78,7 @@ def main():
         time_now_hr = strptime(ctime(time_now), '%a %b %d %H:%M:%S %Y',)
         
         # Every morning at 8 am, try to spread how people can join the Revolution against Trump.
-        if time_now_hr.tm_min == 0 and time_now_hr.tm_sec == 0 and time_now_hr.tm_hour == 8:
+        if time_now_hr.tm_min == 0 and time_now_hr.tm_sec <= 10 and time_now_hr.tm_hour == 8:
             try:
                 api = TwitterAPI(CONSUMER_KEY, CONSUMER_SECRET, ACCESS_TOKEN, ACCESS_SECRET)
                 request = api.request(
